@@ -20,6 +20,7 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/statbmp.h>
 #include <wx/sizer.h>
 #include <wx/frame.h>
 
@@ -38,6 +39,7 @@ class MainFrameBase : public wxFrame
 		wxTextCtrl* m_textCtrl2;
 		wxButton* m_button1;
 		wxStaticText* m_staticText2;
+		wxStaticBitmap* m_bitmap1;
 
 		// Virtual event handlers, override them in your derived class
 		virtual void OnCloseFrame( wxCloseEvent& event ) { event.Skip(); }
@@ -46,7 +48,7 @@ class MainFrameBase : public wxFrame
 
 	public:
 
-		MainFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("TSN Soft"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 125,217 ), long style = wxCAPTION|wxCLOSE_BOX|wxTAB_TRAVERSAL );
+		MainFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("TSN Soft"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 125,260 ), long style = wxCAPTION|wxCLOSE_BOX|wxTAB_TRAVERSAL );
 
 		~MainFrameBase();
 

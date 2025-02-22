@@ -255,6 +255,7 @@ void ProjectCreator::CopyDirectory(const wxString& source, const wxString& desti
 // Функция для замены содержимого файла
 void ProjectCreator::ReplaceInFile(const wxString& filePath, const wxString& projectName, wxString wxWidgetsPath)
 {
+    // Если путь к wxWidgets указан, гарантируем, что он заканчивается слэшем
     if (!wxWidgetsPath.IsEmpty()) {
         if (!wxWidgetsPath.EndsWith("/") && !wxWidgetsPath.EndsWith("\\")) {
             wxWidgetsPath.Append("/");
@@ -267,26 +268,29 @@ void ProjectCreator::ReplaceInFile(const wxString& filePath, const wxString& pro
         return;
     }
 
+    // Читаем содержимое файла
     wxString content;
     for (content = file.GetFirstLine(); !file.Eof(); content += file.GetNextLine() + "\n")
         ;
     file.Close();
 
+    // Замена имени проекта
     content.Replace("RPCPP_wx_App", projectName);
     content.Replace("DialogBlocks_wx_App", projectName);
 
+    // Если указан путь к wxWidgets, заменяем только те вхождения, которые заканчиваются на слэш
     if (!wxWidgetsPath.IsEmpty()) {
         content.Replace("D:/Development/RedPanda-CPP/wxWidgets/", wxWidgetsPath);
-        content.Replace("D:/Development/RedPanda-CPP/wxWidgets",  wxWidgetsPath);
         content.Replace("D:\\Development\\RedPanda-CPP\\wxWidgets\\", wxWidgetsPath);
-        content.Replace("D:\\Development\\RedPanda-CPP\\wxWidgets",  wxWidgetsPath);
     }
 
+    // Перезаписываем файл с внесёнными изменениями
     file.Clear();
     file.AddLine(content);
     file.Write();
     file.Close();
 }
+
 
 // Основной класс приложения
 class MyApp : public wxApp {

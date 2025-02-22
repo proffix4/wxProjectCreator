@@ -7,11 +7,13 @@
 
 #include "gui.h"
 
+#include "wxwidgets.xpm"
+
 ///////////////////////////////////////////////////////////////////////////
 
 MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxSize( 125,217 ), wxSize( 125,217 ) );
+	this->SetSizeHints( wxSize( 125,260 ), wxSize( 125,260 ) );
 
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
@@ -32,6 +34,9 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	m_staticText2 = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
 	mainSizer->Add( m_staticText2, 0, wxALL, 5 );
+
+	m_bitmap1 = new wxStaticBitmap( this, wxID_ANY, wxBitmap( wxwidgets_xpm ), wxDefaultPosition, wxSize( 60,60 ), 0 );
+	mainSizer->Add( m_bitmap1, 0, wxALL, 5 );
 
 
 	this->SetSizer( mainSizer );

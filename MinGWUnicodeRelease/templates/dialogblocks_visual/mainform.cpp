@@ -27,6 +27,7 @@
 
 ////@begin XPM images
 #include "tsnsoft.xpm"
+#include "wxwidgets.xpm"
 ////@end XPM images
 
 
@@ -140,6 +141,9 @@ void MainForm::CreateControls()
     wxTextCtrl* itemTextCtrl2 = new wxTextCtrl( itemFrame1, ID_TEXTCTRL_b, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemGridBagSizer1->Add(itemTextCtrl2, wxGBPosition(3, 6), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 4);
 
+    wxStaticBitmap* itemStaticBitmap1 = new wxStaticBitmap( itemFrame1, wxID_STATIC, itemFrame1->GetBitmapResource(wxT("wxwidgets.xpm")), wxDefaultPosition, wxSize(60, 46), 0 );
+    itemGridBagSizer1->Add(itemStaticBitmap1, wxGBPosition(5, 2), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     wxTextCtrl* itemTextCtrl3 = new wxTextCtrl( itemFrame1, ID_TEXTCTRL_c, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
     itemGridBagSizer1->Add(itemTextCtrl3, wxGBPosition(7, 6), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 4);
 
@@ -164,6 +168,11 @@ wxBitmap MainForm::GetBitmapResource( const wxString& name )
     // Bitmap retrieval
 ////@begin MainForm bitmap retrieval
     wxUnusedVar(name);
+    if (name == wxT("wxwidgets.xpm"))
+    {
+        wxBitmap bitmap(wxwidgets_xpm);
+        return bitmap;
+    }
     return wxNullBitmap;
 ////@end MainForm bitmap retrieval
 }
