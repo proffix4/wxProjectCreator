@@ -534,9 +534,9 @@
         <long name="title-mode">0</long>
         <long name="locked">1</long>
         <document>
-          <string name="title">"DialogBlocksConsoleApp.rc"</string>
+          <string name="title">"DialogBlocks_wx_App.rc"</string>
           <string name="type">"source-editor-document"</string>
-          <string name="filename">"DialogBlocksConsoleApp.rc"</string>
+          <string name="filename">"DialogBlocks_wx_App.rc"</string>
           <string name="icon-name">"source-editor"</string>
           <long name="is-transient">0</long>
           <long name="owns-file">0</long>
@@ -546,9 +546,9 @@
           <string name="language">""</string>
         </document>
         <document>
-          <string name="title">"DialogBlocksConsoleApp.vcxproj"</string>
+          <string name="title">"DialogBlocks_wx_App.vcxproj"</string>
           <string name="type">"source-editor-document"</string>
-          <string name="filename">"DialogBlocksConsoleApp.vcxproj"</string>
+          <string name="filename">"DialogBlocks_wx_App.vcxproj"</string>
           <string name="icon-name">"source-editor"</string>
           <long name="is-transient">0</long>
           <long name="owns-file">0</long>
@@ -558,9 +558,9 @@
           <string name="language">""</string>
         </document>
         <document>
-          <string name="title">"DialogBlocksConsoleApp.vcxproj"</string>
+          <string name="title">"DialogBlocks_wx_App.vcxproj"</string>
           <string name="type">"source-editor-document"</string>
-          <string name="filename">"DialogBlocksConsoleApp.vcxproj"</string>
+          <string name="filename">"DialogBlocks_wx_App.vcxproj"</string>
           <string name="icon-name">"source-editor"</string>
           <long name="is-transient">0</long>
           <long name="owns-file">0</long>

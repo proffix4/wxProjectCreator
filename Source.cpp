@@ -13,7 +13,8 @@
 #include <wx/fileconf.h>   // Заголовок для использования wxFileConfig
 #include <wx/filefn.h>     // Функции для работы с файлами (копирование, удаление и т.д.)
 #include <wx/textfile.h>   // Работа с текстовыми файлами
-#include "tsnsoft.xpm"     // Подключение XPM-изображения для иконки окна
+#include "tsnsoft.xpm"     // Подключение XPM-изображения для иконки и картинки
+#include "wxwidgets.xpm"     // Подключение XPM-изображения для иконки и картинки
 
 // Константа для имени конфигурационного файла
 const wxString CONFIG_FILE_NAME = L"wxProjectCreator.ini";
@@ -23,10 +24,14 @@ class ProjectCreator : public wxFrame {
 public:
     // Конструктор окна ProjectCreator
     ProjectCreator()
-        : wxFrame(nullptr, wxID_ANY, L"Создание консольного wx-проекта (TSN, v2025.2)", wxDefaultPosition, wxSize(500, 200))
+        : wxFrame(nullptr, wxID_ANY, L"Создатель нового проекта с wxWidgets (ver.4)", wxDefaultPosition, wxSize(500, 325))
     {
         SetIcon(wxIcon(tsnsoft_xpm));
         Centre();
+
+        // --- Создание статусной строки с текстом  ---
+        CreateStatusBar();
+        SetStatusText(L"     Талипов С.Н. ✬ г. Павлодар, 2025 г. ✬ https://github.com/tsnsoft");
 
         // --- Создание основной панели ---
         m_panel = new wxPanel(this, wxID_ANY);
@@ -52,6 +57,10 @@ public:
         templateSizer->Add(templateChoice, 1, wxALL | wxEXPAND, 5);
         panelSizer->Add(templateSizer, 0, wxEXPAND);
 
+        // --- Чекбокс для выбора визуальной программы ---
+        visualCheckBox = new wxCheckBox(m_panel, wxID_ANY, L"Визуальная программа");
+        panelSizer->Add(visualCheckBox, 0, wxALL | wxALIGN_LEFT, 5);
+
         // --- Строка для ввода пути к wxWidgets (показывается только при выборе "RedPanda-CPP") ---
         wxBoxSizer* wxWidgetsPathSizer = new wxBoxSizer(wxHORIZONTAL);
         wxWidgetsLabel = new wxStaticText(m_panel, wxID_ANY, L"Путь к wxWidgets:");
@@ -64,6 +73,10 @@ public:
         wxButton* createButton = new wxButton(m_panel, wxID_ANY, L"Сделать проект");
         createButton->Bind(wxEVT_BUTTON, &ProjectCreator::OnCreateProject, this);
         panelSizer->Add(createButton, 0, wxALL | wxALIGN_CENTER, 10);
+
+        // --- Отображение картинки (из файла tsnsoft.xpm) под кнопкой ---
+        wxStaticBitmap* imageBitmap = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(wxwidgets_xpm));
+        panelSizer->Add(imageBitmap, 0, wxALL | wxALIGN_CENTER, 10);
 
         // --- Загрузка настроек приложения ---
         LoadSettings();
@@ -87,6 +100,7 @@ private:
     wxChoice*   templateChoice;
     wxStaticText* wxWidgetsLabel;
     wxTextCtrl* wxWidgetsPathCtrl;
+    wxCheckBox* visualCheckBox; // Элемент для выбора визуальной программы
 
     // Прототипы функций для копирования директории и замены содержимого файла
     void CopyDirectory(const wxString& source, const wxString& destination);
@@ -135,6 +149,9 @@ private:
                 projectNameCtrl->SetSelection(0, 0);
             });
         }
+        long visualProgram = 0;
+        if (config.Read(L"VisualProgram", &visualProgram))
+            visualCheckBox->SetValue(visualProgram == 1);
     }
 
     // --- Функция сохранения настроек приложения в файл рядом с exe ---
@@ -148,6 +165,7 @@ private:
         config.Write(L"ProjectName", projectNameCtrl->GetValue());
         config.Write(L"TemplateType", templateChoice->GetSelection());
         config.Write(L"WxWidgetsPath", wxWidgetsPathCtrl->GetValue());
+        config.Write(L"VisualProgram", visualCheckBox->GetValue() ? 1 : 0);
         config.Flush();
     }
 
@@ -167,8 +185,16 @@ private:
             return;
         }
 
-        wxString templatePath = basePath + L"/templates/" +
-            (templateType == L"DialogBlocks" ? L"dialogblocks_console" : L"redpanda_console");
+        // Определяем путь к шаблонам в зависимости от выбранного типа и состояния чекбокса
+        wxString templatePath;
+        if (visualCheckBox->GetValue()) {
+            templatePath = basePath + L"/templates/" +
+                (templateType == L"DialogBlocks" ? L"dialogblocks_visual" : L"redpanda_visual");
+        }
+        else {
+            templatePath = basePath + L"/templates/" +
+                (templateType == L"DialogBlocks" ? L"dialogblocks_console" : L"redpanda_console");
+        }
         wxString commonPath = basePath + L"/templates/common";
         SaveSettings();
         CopyDirectory(templatePath, projectPath);

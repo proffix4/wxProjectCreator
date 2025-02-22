@@ -1,6 +1,6 @@
 ﻿[Project]
 filename = redpanda-cpp.dev
-name = RPCPP_wx_Console_Hello
+name = RPCPP_wx_App
 UnitCount = 2
 Type = 1
 Ver = 3
@@ -9,7 +9,7 @@ Libs = D:/Development/RedPanda-CPP/wxWidgets/lib/gcc_lib
 Bins = 
 ResourceIncludes = 
 MakeIncludes = 
-PrivateResource = RPCPP_wx_Console_Hello_private.rc
+PrivateResource = RPCPP_wx_App_private.rc
 Compiler = 
 CppCompiler = -pipe -mthreads -D__GNUWIN32__ -D__WXMSW__ -DwxUSE_UNICODE -Wall -g -O0 -ID:\Development\RedPanda-CPP\wxWidgets\include -ID:\Development\RedPanda-CPP\wxWidgets\lib\gcc_lib\mswud
 Linker = -LD:\Development\RedPanda-CPP\wxWidgets\lib\gcc_lib -mthreads -lwxmsw32ud_core -lwxbase32ud -lwxpngd -lwxjpegd -lwxtiffd -lwxzlibd -lwxregexud -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lcomctl32 -lwsock32 -lodbc32 -lshlwapi -lversion -loleacc -luxtheme -lstdc++ -finput-charset=utf-8 -lsqlite3
@@ -69,8 +69,8 @@ FileDescription = Developed using the Red Panda C++ IDE
 InternalName = 
 LegalCopyright = 
 LegalTrademarks = 
-OriginalFilename = RPCPP_wx_Console_Hello.exe
-ProductName = RPCPP_wx_Console_Hello
+OriginalFilename = RPCPP_wx_App.exe
+ProductName = RPCPP_wx_App
 ProductVersion = 0.1.1.1
 AutoIncBuildNr = 0
 SyncProduct = 1
