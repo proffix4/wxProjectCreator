@@ -272,8 +272,8 @@ void ProjectCreator::ReplaceInFile(const wxString& filePath, const wxString& pro
         ;
     file.Close();
 
-    content.Replace("RPCPP_wx_Console_Hello", projectName);
-    content.Replace("DialogBlocksConsoleApp", projectName);
+    content.Replace("RPCPP_wx_App", projectName);
+    content.Replace("DialogBlocks_wx_App", projectName);
 
     if (!wxWidgetsPath.IsEmpty()) {
         content.Replace("D:/Development/RedPanda-CPP/wxWidgets/", wxWidgetsPath);
