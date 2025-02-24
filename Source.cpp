@@ -13,8 +13,9 @@
 #include <wx/fileconf.h>   // Заголовок для использования wxFileConfig
 #include <wx/filefn.h>     // Функции для работы с файлами (копирование, удаление и т.д.)
 #include <wx/textfile.h>   // Работа с текстовыми файлами
+#include <wx/timer.h>      // Таймер для анимации текста в статусной строке
 #include "tsnsoft.xpm"     // Подключение XPM-изображения для иконки и картинки
-#include "wxwidgets.xpm"     // Подключение XPM-изображения для иконки и картинки
+#include "wxwidgets.xpm"   // Подключение XPM-изображения для иконки и картинки
 
 // Константа для имени конфигурационного файла
 const wxString CONFIG_FILE_NAME = L"wxProjectCreator.ini";
@@ -22,284 +23,315 @@ const wxString CONFIG_FILE_NAME = L"wxProjectCreator.ini";
 // Класс ProjectCreator является основным окном приложения и наследуется от wxFrame
 class ProjectCreator : public wxFrame {
 public:
-    // Конструктор окна ProjectCreator
-    ProjectCreator()
-        : wxFrame(nullptr, wxID_ANY, L"Создатель нового проекта с wxWidgets (ver.4)", wxDefaultPosition, wxSize(500, 325))
-    {
-        SetIcon(wxIcon(tsnsoft_xpm));
-        Centre();
+	// Конструктор окна ProjectCreator
+	ProjectCreator()
+		: wxFrame(nullptr, wxID_ANY, L"Создатель нового проекта с wxWidgets (ver.4)", wxDefaultPosition, wxSize(500, 325)),
+		timer(this) // Инициализация таймера
+	{
+		SetIcon(wxIcon(tsnsoft_xpm)); // Установка иконки окна
+		SetMinSize(GetSize()); // Фиксация размера окна
+		SetMaxSize(GetSize()); // Фиксация размера окна
+        SetWindowStyle(wxDEFAULT_FRAME_STYLE & ~wxRESIZE_BORDER & ~wxMAXIMIZE_BOX); // Убрать кнопку "распахнуть на весь экран"
 
-        // --- Создание статусной строки с текстом  ---
-        CreateStatusBar();
-        SetStatusText(L"     Талипов С.Н. ✬ г. Павлодар, 2025 г. ✬ https://github.com/tsnsoft");
 
-        // --- Создание основной панели ---
-        m_panel = new wxPanel(this, wxID_ANY);
-        wxBoxSizer* panelSizer = new wxBoxSizer(wxVERTICAL);
-        m_panel->SetSizer(panelSizer);
+		Centre(); // Центрирование окна на экране
 
-        // --- Строка для ввода имени проекта ---
-        wxBoxSizer* projectNameSizer = new wxBoxSizer(wxHORIZONTAL);
-        projectNameSizer->Add(new wxStaticText(m_panel, wxID_ANY, L"Имя проекта:"), 
-                                0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-        projectNameCtrl = new wxTextCtrl(m_panel, wxID_ANY);
-        projectNameSizer->Add(projectNameCtrl, 1, wxALL | wxEXPAND, 5);
-        panelSizer->Add(projectNameSizer, 0, wxEXPAND);
+		// --- Создание статусной строки ---
+		CreateStatusBar(); // Создание статусной строки
+		originalText = L"✬    Талипов С.Н.    ✬    г. Павлодар, 2025 г.    ✬ https://github.com/tsnsoft    ";
+		scrollingText = originalText; // Копируем текст для анимации
+		SetStatusText(scrollingText); // Устанавливаем текст в статусную строку
 
-        // --- Строка для выбора типа шаблона ---
-        wxBoxSizer* templateSizer = new wxBoxSizer(wxHORIZONTAL);
-        templateSizer->Add(new wxStaticText(m_panel, wxID_ANY, L"Тип шаблона:"), 
-                             0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-        templateChoice = new wxChoice(m_panel, wxID_ANY);
-        templateChoice->Append(L"DialogBlocks");
-        templateChoice->Append(L"RedPanda-CPP");
-        templateChoice->Bind(wxEVT_CHOICE, &ProjectCreator::OnTemplateChoice, this);
-        templateSizer->Add(templateChoice, 1, wxALL | wxEXPAND, 5);
-        panelSizer->Add(templateSizer, 0, wxEXPAND);
+		// Запуск таймера с интервалом 150 мс
+		Bind(wxEVT_TIMER, &ProjectCreator::OnTimer, this); // Привязка события таймера к функции
+		timer.Start(150); // Запуск таймера
 
-        // --- Чекбокс для выбора визуальной программы ---
-        visualCheckBox = new wxCheckBox(m_panel, wxID_ANY, L"Визуальная программа");
-        panelSizer->Add(visualCheckBox, 0, wxALL | wxALIGN_LEFT, 5);
+		// --- Создание основной панели ---
+		m_panel = new wxPanel(this, wxID_ANY);
+		wxBoxSizer* panelSizer = new wxBoxSizer(wxVERTICAL);
+		m_panel->SetSizer(panelSizer);
 
-        // --- Строка для ввода пути к wxWidgets (показывается только при выборе "RedPanda-CPP") ---
-        wxBoxSizer* wxWidgetsPathSizer = new wxBoxSizer(wxHORIZONTAL);
-        wxWidgetsLabel = new wxStaticText(m_panel, wxID_ANY, L"Путь к wxWidgets:");
-        wxWidgetsPathSizer->Add(wxWidgetsLabel, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-        wxWidgetsPathCtrl = new wxTextCtrl(m_panel, wxID_ANY);
-        wxWidgetsPathSizer->Add(wxWidgetsPathCtrl, 1, wxALL | wxEXPAND, 5);
-        panelSizer->Add(wxWidgetsPathSizer, 0, wxEXPAND);
+		// --- Строка для ввода имени проекта ---
+		wxBoxSizer* projectNameSizer = new wxBoxSizer(wxHORIZONTAL);
+		projectNameSizer->Add(new wxStaticText(m_panel, wxID_ANY, L"Имя проекта:"),
+			0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+		projectNameCtrl = new wxTextCtrl(m_panel, wxID_ANY);
+		projectNameSizer->Add(projectNameCtrl, 1, wxALL | wxEXPAND, 5);
+		panelSizer->Add(projectNameSizer, 0, wxEXPAND);
 
-        // --- Кнопка для создания проекта ---
-        wxButton* createButton = new wxButton(m_panel, wxID_ANY, L"Сделать проект");
-        createButton->Bind(wxEVT_BUTTON, &ProjectCreator::OnCreateProject, this);
-        panelSizer->Add(createButton, 0, wxALL | wxALIGN_CENTER, 10);
+		// --- Строка для выбора типа шаблона ---
+		wxBoxSizer* templateSizer = new wxBoxSizer(wxHORIZONTAL);
+		templateSizer->Add(new wxStaticText(m_panel, wxID_ANY, L"Тип шаблона:"),
+			0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+		templateChoice = new wxChoice(m_panel, wxID_ANY);
+		templateChoice->Append(L"DialogBlocks");
+		templateChoice->Append(L"RedPanda-CPP");
+		templateChoice->Bind(wxEVT_CHOICE, &ProjectCreator::OnTemplateChoice, this);
+		templateSizer->Add(templateChoice, 1, wxALL | wxEXPAND, 5);
+		panelSizer->Add(templateSizer, 0, wxEXPAND);
 
-        // --- Отображение картинки (из файла tsnsoft.xpm) под кнопкой ---
-        wxStaticBitmap* imageBitmap = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(wxwidgets_xpm));
-        panelSizer->Add(imageBitmap, 0, wxALL | wxALIGN_CENTER, 10);
+		// --- Чекбокс для выбора визуальной программы ---
+		visualCheckBox = new wxCheckBox(m_panel, wxID_ANY, L"Визуальная программа");
+		panelSizer->Add(visualCheckBox, 0, wxALL | wxALIGN_LEFT, 5);
 
-        // --- Загрузка настроек приложения ---
-        LoadSettings();
-        wxCommandEvent evt;
-        OnTemplateChoice(evt);
+		// --- Строка для ввода пути к wxWidgets (показывается только при выборе "RedPanda-CPP") ---
+		wxBoxSizer* wxWidgetsPathSizer = new wxBoxSizer(wxHORIZONTAL);
+		wxWidgetsLabel = new wxStaticText(m_panel, wxID_ANY, L"Путь к wxWidgets:");
+		wxWidgetsPathSizer->Add(wxWidgetsLabel, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+		wxWidgetsPathCtrl = new wxTextCtrl(m_panel, wxID_ANY);
+		wxWidgetsPathSizer->Add(wxWidgetsPathCtrl, 1, wxALL | wxEXPAND, 5);
+		panelSizer->Add(wxWidgetsPathSizer, 0, wxEXPAND);
 
-        // --- Размещение панели на основном окне (фрейме) ---
-        wxBoxSizer* frameSizer = new wxBoxSizer(wxVERTICAL);
-        frameSizer->Add(m_panel, 1, wxEXPAND);
-        SetSizer(frameSizer);
+		// --- Кнопка для создания проекта ---
+		wxButton* createButton = new wxButton(m_panel, wxID_ANY, L"Сделать проект");
+		createButton->Bind(wxEVT_BUTTON, &ProjectCreator::OnCreateProject, this);
+		panelSizer->Add(createButton, 0, wxALL | wxALIGN_CENTER, 10);
 
-        // --- Фиксация размера окна ---
-        SetMinSize(GetSize());
-        SetMaxSize(GetSize());
-    }
+		// --- Отображение картинки (из файла tsnsoft.xpm) под кнопкой ---
+		wxStaticBitmap* imageBitmap = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(wxwidgets_xpm));
+		panelSizer->Add(imageBitmap, 0, wxALL | wxALIGN_CENTER, 10);
+
+		// --- Загрузка настроек приложения ---
+		LoadSettings();
+		wxCommandEvent evt;
+		OnTemplateChoice(evt);
+
+		// --- Размещение панели на основном окне (фрейме) ---
+		wxBoxSizer* frameSizer = new wxBoxSizer(wxVERTICAL);
+		frameSizer->Add(m_panel, 1, wxEXPAND);
+		SetSizer(frameSizer);
+
+		// --- Фиксация размера окна ---
+		SetMinSize(GetSize());
+		SetMaxSize(GetSize());
+	}
 
 private:
-    // Элементы управления
-    wxPanel* m_panel;
-    wxTextCtrl* projectNameCtrl;
-    wxChoice*   templateChoice;
-    wxStaticText* wxWidgetsLabel;
-    wxTextCtrl* wxWidgetsPathCtrl;
-    wxCheckBox* visualCheckBox; // Элемент для выбора визуальной программы
+	// Элементы управления
+	wxPanel* m_panel; // Основная панель
+	wxTextCtrl* projectNameCtrl; // Элемент для ввода имени проекта
+	wxChoice* templateChoice; // Элемент для выбора типа шаблона
+	wxStaticText* wxWidgetsLabel; // Метка для пути к wxWidgets
+	wxTextCtrl* wxWidgetsPathCtrl; // Элемент для ввода пути к wxWidgets
+	wxCheckBox* visualCheckBox; // Элемент для выбора визуальной программы
+	wxTimer timer;         // Таймер для бегущей строки
+	wxString originalText; // Оригинальный текст
+	wxString scrollingText; // Текущий текст для анимации
 
-    // Прототипы функций для копирования директории и замены содержимого файла
-    void CopyDirectory(const wxString& source, const wxString& destination);
-    void ReplaceInFile(const wxString& filePath, const wxString& projectName, wxString wxWidgetsPath);
+	// Прототипы функций для копирования директории и замены содержимого файла
+	void CopyDirectory(const wxString& source, const wxString& destination);
+	void ReplaceInFile(const wxString& filePath, const wxString& projectName, wxString wxWidgetsPath);
 
-    // Обработчик изменения выбора шаблона
-    void OnTemplateChoice(wxCommandEvent&)
-    {
-        if (templateChoice->GetSelection() == 1) {
-            wxWidgetsLabel->Show();
-            wxWidgetsPathCtrl->Show();
-        } else {
-            wxWidgetsLabel->Hide();
-            wxWidgetsPathCtrl->Hide();
-        }
-        m_panel->Layout();
-    }
+	// Функция обработки таймера для бегущей строки
+	void OnTimer(wxTimerEvent&) {
+		if (!scrollingText.IsEmpty()) {
+			// Двигаем текст влево, перемещая первый символ в конец строки
+			scrollingText = scrollingText.Mid(1) + scrollingText[0];
 
-    // --- Функция загрузки настроек приложения из файла рядом с exe ---
-    void LoadSettings()
-    {
-        // Получаем директорию исполняемого файла
-        wxString exePath = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath();
-        // Формируем полный путь к файлу настроек, используя константу CONFIG_FILE_NAME
-        wxString configPath = exePath + wxFILE_SEP_PATH + CONFIG_FILE_NAME;
+			// Устанавливаем новый текст в статусную строку
+			SetStatusText(scrollingText);
 
-        // Создаем wxFileConfig, указывая, что файл настроек хранится локально
-        wxFileConfig config("ProjectCreator", wxEmptyString, configPath, wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
+			// Принудительное обновление GUI
+			Refresh();
+			Update();
+		}
+	}
 
-        wxString projectName, wxWidgetsPath;
-        int templateIndex;
-        if (config.Read(L"ProjectName", &projectName)) {
-            projectNameCtrl->SetValue(projectName);
-            // Отложенный сброс курсора – вызывается после компоновки
-            CallAfter([=]() {
-                projectNameCtrl->SetInsertionPoint(0);
-                projectNameCtrl->SetSelection(0, 0);
-            });
-        }
-        if (config.Read(L"TemplateType", &templateIndex))
-            templateChoice->SetSelection(templateIndex);
-        if (config.Read(L"WxWidgetsPath", &wxWidgetsPath)) {
-            wxWidgetsPathCtrl->SetValue(wxWidgetsPath);
-            CallAfter([=]() {
-                wxWidgetsPathCtrl->SetInsertionPoint(0);
-                projectNameCtrl->SetSelection(0, 0);
-            });
-        }
-        long visualProgram = 0;
-        if (config.Read(L"VisualProgram", &visualProgram))
-            visualCheckBox->SetValue(visualProgram == 1);
-    }
+	// Обработчик изменения выбора шаблона
+	void OnTemplateChoice(wxCommandEvent&)
+	{
+		if (templateChoice->GetSelection() == 1) {
+			wxWidgetsLabel->Show();
+			wxWidgetsPathCtrl->Show();
+		}
+		else {
+			wxWidgetsLabel->Hide();
+			wxWidgetsPathCtrl->Hide();
+		}
+		m_panel->Layout();
+	}
 
-    // --- Функция сохранения настроек приложения в файл рядом с exe ---
-    void SaveSettings()
-    {
-        wxString exePath = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath();
-        // Формируем полный путь к файлу настроек, используя константу CONFIG_FILE_NAME
-        wxString configPath = exePath + wxFILE_SEP_PATH + CONFIG_FILE_NAME;
+	// --- Функция загрузки настроек приложения из файла рядом с exe ---
+	void LoadSettings()
+	{
+		// Получаем директорию исполняемого файла
+		wxString exePath = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath();
+		// Формируем полный путь к файлу настроек, используя константу CONFIG_FILE_NAME
+		wxString configPath = exePath + wxFILE_SEP_PATH + CONFIG_FILE_NAME;
 
-        wxFileConfig config("ProjectCreator", wxEmptyString, configPath, wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
-        config.Write(L"ProjectName", projectNameCtrl->GetValue());
-        config.Write(L"TemplateType", templateChoice->GetSelection());
-        config.Write(L"WxWidgetsPath", wxWidgetsPathCtrl->GetValue());
-        config.Write(L"VisualProgram", visualCheckBox->GetValue() ? 1 : 0);
-        config.Flush();
-    }
+		// Создаем wxFileConfig, указывая, что файл настроек хранится локально
+		wxFileConfig config("ProjectCreator", wxEmptyString, configPath, wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
 
-    // Обработчик события нажатия на кнопку "Сделать проект"
-    void OnCreateProject(wxCommandEvent& event)
-    {
-        wxString projectName = projectNameCtrl->GetValue();
-        if (projectName.IsEmpty()) {
-            wxMessageBox(L"Введите имя проекта", L"Ошибка", wxOK | wxICON_ERROR);
-            return;
-        }
-        wxString templateType = templateChoice->GetStringSelection();
-        wxString basePath = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath();
-        wxString projectPath = basePath + L"/" + projectName;
-        if (!wxFileName::Mkdir(projectPath, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL)) {
-            wxMessageBox(L"Не удалось создать директорию проекта", L"Ошибка", wxOK | wxICON_ERROR);
-            return;
-        }
+		wxString projectName, wxWidgetsPath;
+		int templateIndex;
+		if (config.Read(L"ProjectName", &projectName)) {
+			projectNameCtrl->SetValue(projectName);
+			// Отложенный сброс курсора – вызывается после компоновки
+			CallAfter([=]() {
+				projectNameCtrl->SetInsertionPoint(0);
+				projectNameCtrl->SetSelection(0, 0);
+				});
+		}
+		if (config.Read(L"TemplateType", &templateIndex))
+			templateChoice->SetSelection(templateIndex);
+		if (config.Read(L"WxWidgetsPath", &wxWidgetsPath)) {
+			wxWidgetsPathCtrl->SetValue(wxWidgetsPath);
+			CallAfter([=]() {
+				wxWidgetsPathCtrl->SetInsertionPoint(0);
+				projectNameCtrl->SetSelection(0, 0);
+				});
+		}
+		long visualProgram = 0;
+		if (config.Read(L"VisualProgram", &visualProgram))
+			visualCheckBox->SetValue(visualProgram == 1);
+	}
 
-        // Определяем путь к шаблонам в зависимости от выбранного типа и состояния чекбокса
-        wxString templatePath;
-        if (visualCheckBox->GetValue()) {
-            templatePath = basePath + L"/templates/" +
-                (templateType == L"DialogBlocks" ? L"dialogblocks_visual" : L"redpanda_visual");
-        }
-        else {
-            templatePath = basePath + L"/templates/" +
-                (templateType == L"DialogBlocks" ? L"dialogblocks_console" : L"redpanda_console");
-        }
-        wxString commonPath = basePath + L"/templates/common";
-        SaveSettings();
-        CopyDirectory(templatePath, projectPath);
-        CopyDirectory(commonPath, projectPath);
+	// --- Функция сохранения настроек приложения в файл рядом с exe ---
+	void SaveSettings()
+	{
+		wxString exePath = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath();
+		// Формируем полный путь к файлу настроек, используя константу CONFIG_FILE_NAME
+		wxString configPath = exePath + wxFILE_SEP_PATH + CONFIG_FILE_NAME;
 
-        if (templateType == L"RedPanda-CPP") {
-            wxString wxWidgetsPath = wxWidgetsPathCtrl->GetValue();
-            wxString devFilePath   = projectPath + L"/redpanda-cpp.dev";
-            wxString newDevFilePath = projectPath + L"/" + projectName + L".dev";
-            if (wxFileExists(devFilePath)) {
-                if (!wxRenameFile(devFilePath, newDevFilePath)) {
-                    wxMessageBox(L"Не удалось переименовать dev файл", L"Ошибка", wxOK | wxICON_ERROR);
-                    return;
-                }
-                ReplaceInFile(newDevFilePath, projectName, wxWidgetsPath);
-            }
-        }
-        else if (templateType == L"DialogBlocks") {
-            wxString pjdFilePath = projectPath + L"/dialogblocks.pjd";
-            wxString newPjdFilePath = projectPath + L"/" + projectName + L".pjd";
-            if (wxFileExists(pjdFilePath)) {
-                if (!wxRenameFile(pjdFilePath, newPjdFilePath)) {
-                    wxMessageBox(L"Не удалось переименовать pjd файл", L"Ошибка", wxOK | wxICON_ERROR);
-                    return;
-                }
-                ReplaceInFile(newPjdFilePath, projectName, wxEmptyString);
-            }
-        }
-        wxMessageBox(L"Проект создан", L"Готово", wxOK | wxICON_INFORMATION);
-    }
+		wxFileConfig config("ProjectCreator", wxEmptyString, configPath, wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
+		config.Write(L"ProjectName", projectNameCtrl->GetValue());
+		config.Write(L"TemplateType", templateChoice->GetSelection());
+		config.Write(L"WxWidgetsPath", wxWidgetsPathCtrl->GetValue());
+		config.Write(L"VisualProgram", visualCheckBox->GetValue() ? 1 : 0);
+		config.Flush();
+	}
+
+	// Обработчик события нажатия на кнопку "Сделать проект"
+	void OnCreateProject(wxCommandEvent& event)
+	{
+		wxString projectName = projectNameCtrl->GetValue();
+		if (projectName.IsEmpty()) {
+			wxMessageBox(L"Введите имя проекта", L"Ошибка", wxOK | wxICON_ERROR);
+			return;
+		}
+		wxString templateType = templateChoice->GetStringSelection();
+		wxString basePath = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath();
+		wxString projectPath = basePath + L"/" + projectName;
+		if (!wxFileName::Mkdir(projectPath, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL)) {
+			wxMessageBox(L"Не удалось создать директорию проекта", L"Ошибка", wxOK | wxICON_ERROR);
+			return;
+		}
+
+		// Определяем путь к шаблонам в зависимости от выбранного типа и состояния чекбокса
+		wxString templatePath;
+		if (visualCheckBox->GetValue()) {
+			templatePath = basePath + L"/templates/" +
+				(templateType == L"DialogBlocks" ? L"dialogblocks_visual" : L"redpanda_visual");
+		}
+		else {
+			templatePath = basePath + L"/templates/" +
+				(templateType == L"DialogBlocks" ? L"dialogblocks_console" : L"redpanda_console");
+		}
+		wxString commonPath = basePath + L"/templates/common";
+		SaveSettings();
+		CopyDirectory(templatePath, projectPath);
+		CopyDirectory(commonPath, projectPath);
+
+		if (templateType == L"RedPanda-CPP") {
+			wxString wxWidgetsPath = wxWidgetsPathCtrl->GetValue();
+			wxString devFilePath = projectPath + L"/redpanda-cpp.dev";
+			wxString newDevFilePath = projectPath + L"/" + projectName + L".dev";
+			if (wxFileExists(devFilePath)) {
+				if (!wxRenameFile(devFilePath, newDevFilePath)) {
+					wxMessageBox(L"Не удалось переименовать dev файл", L"Ошибка", wxOK | wxICON_ERROR);
+					return;
+				}
+				ReplaceInFile(newDevFilePath, projectName, wxWidgetsPath);
+			}
+		}
+		else if (templateType == L"DialogBlocks") {
+			wxString pjdFilePath = projectPath + L"/dialogblocks.pjd";
+			wxString newPjdFilePath = projectPath + L"/" + projectName + L".pjd";
+			if (wxFileExists(pjdFilePath)) {
+				if (!wxRenameFile(pjdFilePath, newPjdFilePath)) {
+					wxMessageBox(L"Не удалось переименовать pjd файл", L"Ошибка", wxOK | wxICON_ERROR);
+					return;
+				}
+				ReplaceInFile(newPjdFilePath, projectName, wxEmptyString);
+			}
+		}
+		wxMessageBox(L"Проект создан", L"Готово", wxOK | wxICON_INFORMATION);
+	}
 };
 
 // Функция для копирования директории (рекурсивно копирует файлы и поддиректории)
 void ProjectCreator::CopyDirectory(const wxString& source, const wxString& destination)
 {
-    wxDir dir(source);
-    if (!dir.IsOpened()) {
-        wxMessageBox(L"Не удалось открыть директорию", L"Ошибка", wxOK | wxICON_ERROR);
-        return;
-    }
+	wxDir dir(source);
+	if (!dir.IsOpened()) {
+		wxMessageBox(L"Не удалось открыть директорию", L"Ошибка", wxOK | wxICON_ERROR);
+		return;
+	}
 
-    wxString filename;
-    bool cont = dir.GetFirst(&filename);
-    while (cont) {
-        wxString sourcePath = source + "/" + filename;
-        wxString destPath = destination + "/" + filename;
-        if (wxDirExists(sourcePath)) {
-            wxFileName::Mkdir(destPath, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
-            CopyDirectory(sourcePath, destPath);
-        }
-        else if (wxFileExists(sourcePath)) {
-            wxCopyFile(sourcePath, destPath);
-        }
-        cont = dir.GetNext(&filename);
-    }
+	wxString filename;
+	bool cont = dir.GetFirst(&filename);
+	while (cont) {
+		wxString sourcePath = source + "/" + filename;
+		wxString destPath = destination + "/" + filename;
+		if (wxDirExists(sourcePath)) {
+			wxFileName::Mkdir(destPath, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+			CopyDirectory(sourcePath, destPath);
+		}
+		else if (wxFileExists(sourcePath)) {
+			wxCopyFile(sourcePath, destPath);
+		}
+		cont = dir.GetNext(&filename);
+	}
 }
 
 // Функция для замены содержимого файла
 void ProjectCreator::ReplaceInFile(const wxString& filePath, const wxString& projectName, wxString wxWidgetsPath)
 {
-    // Если путь к wxWidgets указан, гарантируем, что он заканчивается слэшем
-    if (!wxWidgetsPath.IsEmpty()) {
-        if (!wxWidgetsPath.EndsWith("/") && !wxWidgetsPath.EndsWith("\\")) {
-            wxWidgetsPath.Append("/");
-        }
-    }
+	// Если путь к wxWidgets указан, гарантируем, что он заканчивается слэшем
+	if (!wxWidgetsPath.IsEmpty()) {
+		if (!wxWidgetsPath.EndsWith("/") && !wxWidgetsPath.EndsWith("\\")) {
+			wxWidgetsPath.Append("/");
+		}
+	}
 
-    wxTextFile file;
-    if (!file.Open(filePath)) {
-        wxMessageBox(L"Не удалось открыть файл для чтения", L"Ошибка", wxOK | wxICON_ERROR);
-        return;
-    }
+	wxTextFile file;
+	if (!file.Open(filePath)) {
+		wxMessageBox(L"Не удалось открыть файл для чтения", L"Ошибка", wxOK | wxICON_ERROR);
+		return;
+	}
 
-    // Читаем содержимое файла
-    wxString content;
-    for (content = file.GetFirstLine(); !file.Eof(); content += file.GetNextLine() + "\n")
-        ;
-    file.Close();
+	// Читаем содержимое файла
+	wxString content;
+	for (content = file.GetFirstLine(); !file.Eof(); content += file.GetNextLine() + "\n")
+		;
+	file.Close();
 
-    // Замена имени проекта
-    content.Replace("RPCPP_wx_App", projectName);
-    content.Replace("DialogBlocks_wx_App", projectName);
+	// Замена имени проекта
+	content.Replace("RPCPP_wx_App", projectName);
+	content.Replace("DialogBlocks_wx_App", projectName);
 
-    // Если указан путь к wxWidgets, заменяем только те вхождения, которые заканчиваются на слэш
-    if (!wxWidgetsPath.IsEmpty()) {
-        content.Replace("D:/Development/RedPanda-CPP/wxWidgets/", wxWidgetsPath);
-        content.Replace("D:\\Development\\RedPanda-CPP\\wxWidgets\\", wxWidgetsPath);
-    }
+	// Если указан путь к wxWidgets, заменяем только те вхождения, которые заканчиваются на слэш
+	if (!wxWidgetsPath.IsEmpty()) {
+		content.Replace("D:/Development/RedPanda-CPP/wxWidgets/", wxWidgetsPath);
+		content.Replace("D:\\Development\\RedPanda-CPP\\wxWidgets\\", wxWidgetsPath);
+	}
 
-    // Перезаписываем файл с внесёнными изменениями
-    file.Clear();
-    file.AddLine(content);
-    file.Write();
-    file.Close();
+	// Перезаписываем файл с внесёнными изменениями
+	file.Clear();
+	file.AddLine(content);
+	file.Write();
+	file.Close();
 }
 
 
 // Основной класс приложения
 class MyApp : public wxApp {
 public:
-    virtual bool OnInit() {
-        ProjectCreator* frame = new ProjectCreator();
-        frame->Show();
-        return true;
-    }
+	virtual bool OnInit() {
+		ProjectCreator* frame = new ProjectCreator();
+		frame->Show();
+		return true;
+	}
 };
 
 wxIMPLEMENT_APP_NO_MAIN(MyApp);
@@ -307,5 +339,5 @@ wxIMPLEMENT_APP_NO_MAIN(MyApp);
 // Точка входа в приложение
 int main(int argc, char** argv)
 {
-    wxEntry(argc, argv); // Запускаем приложение
+	wxEntry(argc, argv); // Запускаем приложение
 }

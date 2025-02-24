@@ -204,7 +204,7 @@
           <string name="Compiler name">"VC++ Project"</string>
           <string name="Compiler version">"%AUTO%"</string>
           <string name="Debug flags">"%AUTO%"</string>
-          <bool name="dirty">1</bool>
+          <bool name="dirty">0</bool>
           <bool name="Enable .sln generation">1</bool>
           <bool name="Enable makefile generation">1</bool>
           <string name="Executable name">"%EXECUTABLE%"</string>
@@ -287,7 +287,7 @@
           <string name="Compiler name">"VC++ Project"</string>
           <string name="Compiler version">"%AUTO%"</string>
           <string name="Debug flags">"%AUTO%"</string>
-          <bool name="dirty">1</bool>
+          <bool name="dirty">0</bool>
           <bool name="Enable .sln generation">1</bool>
           <bool name="Enable makefile generation">1</bool>
           <string name="Executable name">"%EXECUTABLE%"</string>
@@ -369,7 +369,7 @@
           <string name="Compiler location">"%AUTO%"</string>
           <string name="Compiler name">"MinGW"</string>
           <string name="Debug flags">"%AUTO%"</string>
-          <bool name="dirty">1</bool>
+          <bool name="dirty">0</bool>
           <bool name="Enable makefile generation">1</bool>
           <string name="Executable name">"%EXECUTABLE%"</string>
           <string name="Extra compile flags">"%AUTO%"</string>
@@ -440,7 +440,7 @@
           <string name="Compiler location">"%AUTO%"</string>
           <string name="Compiler name">"MinGW"</string>
           <string name="Debug flags">"%AUTO%"</string>
-          <bool name="dirty">1</bool>
+          <bool name="dirty">0</bool>
           <bool name="Enable makefile generation">1</bool>
           <string name="Executable name">"%EXECUTABLE%"</string>
           <string name="Extra compile flags">"%AUTO%"</string>
@@ -579,6 +579,18 @@
           <long name="title-mode">1</long>
           <long name="locked">0</long>
           <string name="created">"15/10/2024"</string>
+          <string name="language">""</string>
+        </document>
+        <document>
+          <string name="title">"dialogblocks.vcxproj"</string>
+          <string name="type">"source-editor-document"</string>
+          <string name="filename">"dialogblocks.vcxproj"</string>
+          <string name="icon-name">"source-editor"</string>
+          <long name="is-transient">0</long>
+          <long name="owns-file">0</long>
+          <long name="title-mode">1</long>
+          <long name="locked">0</long>
+          <string name="created">"24/2/2025"</string>
           <string name="language">""</string>
         </document>
         <document>
