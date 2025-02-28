@@ -1,9 +1,10 @@
 # wxProjectCreator
-Генератор новых wx-проектов
+Генератор новых проектов с wxWidgets для DialogBlocks, RedPanda-CPP, Visual Studio 2022
 
-После генерации получается папка с готовым шаблонным проектом со всеми нужными настройками
+После генерации получается папка с готовым рабочим шаблонным проектом со всеми нужными настройками
 
 ![srcreenshot](screenshot1.png)
 
 ![srcreenshot](screenshot2.png)
 
+![srcreenshot](screenshot3.png)
