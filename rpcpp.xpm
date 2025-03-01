@@ -2,7 +2,7 @@
 static const char *rpcpp_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 228 2",
-"   c White",
+"   c #F0F0F0",
 "!. c #EB5E00",
 "K. c #EB5E01",
 "y. c #B85514",

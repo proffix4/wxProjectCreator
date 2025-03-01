@@ -44,9 +44,9 @@ public:
         scrollingText = originalText; // Копируем текст для анимации
         SetStatusText(scrollingText); // Устанавливаем текст в статусную строку
 
-        // Запуск таймера с интервалом 250 мс
+        // Запуск таймера с интервалом 150 мс
         Bind(wxEVT_TIMER, &ProjectCreator::OnTimer, this); // Привязка события таймера к функции
-        timer.Start(250); // Запуск таймера
+        timer.Start(150); // Запуск таймера
 
         // --- Создание основной панели ---
         m_panel = new wxPanel(this, wxID_ANY);
@@ -136,8 +136,6 @@ private:
         if (!scrollingText.IsEmpty()) {
             scrollingText = scrollingText.Mid(1) + scrollingText[0];
             SetStatusText(scrollingText);
-            Refresh();
-            Update();
         }
     }
 
