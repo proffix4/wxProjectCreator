@@ -28,7 +28,7 @@ class ProjectCreator : public wxFrame {
 public:
 	// Конструктор окна ProjectCreator
 	ProjectCreator()
-		: wxFrame(nullptr, wxID_ANY, L"Создатель нового проекта с wxWidgets (ver.5)", wxDefaultPosition, wxSize(500, 325)),
+		: wxFrame(nullptr, wxID_ANY, L"Создатель нового проекта с wxWidgets (ver. 5.7)", wxDefaultPosition, wxSize(500, 325)),
 		timer(this) // Инициализация таймера
 	{
 		SetIcon(wxIcon(tsnsoft_xpm)); // Установка иконки окна
