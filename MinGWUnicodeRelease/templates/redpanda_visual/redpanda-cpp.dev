@@ -11,11 +11,11 @@ ResourceIncludes =
 MakeIncludes = 
 PrivateResource = RPCPP_wx_App_private.rc
 Compiler = 
-CppCompiler = -pipe -mthreads -D__GNUWIN32__ -D__WXMSW__ -DwxUSE_UNICODE -Wall -g -O0 -ID:\Development\RedPanda-CPP\wxWidgets\include -ID:\Development\RedPanda-CPP\wxWidgets\lib\gcc_lib\mswud
-Linker = -LD:\Development\RedPanda-CPP\wxWidgets\lib\gcc_lib -mthreads -lwxmsw32ud_core -lwxbase32ud -lwxpngd -lwxjpegd -lwxtiffd -lwxzlibd -lwxregexud -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lcomctl32 -lwsock32 -lodbc32 -lshlwapi -lversion -loleacc -luxtheme -mwindows -lstdc++ -finput-charset=utf-8
+CppCompiler = -pipe -mthreads -D__GNUWIN32__ -D__WXMSW__ -DwxUSE_UNICODE -Wall -g -O0
+Linker = -mthreads -lwxmsw32ud_core -lwxbase32ud -lwxpngd -lwxjpegd -lwxtiffd -lwxzlibd -lwxregexud -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lcomctl32 -lwsock32 -lodbc32 -lshlwapi -lversion -loleacc -luxtheme -mwindows -lstdc++ -finput-charset=utf-8
 ResourceCommand = 
 IsCpp = 1
-Icon = 
+Icon = app.ico
 ExeOutput = 
 ObjectOutput = 
 LogOutput = 
