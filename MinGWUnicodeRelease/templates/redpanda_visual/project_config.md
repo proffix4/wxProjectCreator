@@ -13,14 +13,12 @@
 ### C++ Compiler
 ```sh
 -pipe -mthreads -D__GNUWIN32__ -D__WXMSW__ -DwxUSE_UNICODE -Wall -g -O0 
--ID:\Development\RedPanda-CPP\wxWidgets\include 
--ID:\Development\RedPanda-CPP\wxWidgets\lib\gcc_lib\mswud
 ```
 
 ### Linker
 #### Для консольной wx-программы:
 ```sh
--LD:\Development\RedPanda-CPP\wxWidgets\lib\gcc_lib -mthreads 
+-mthreads 
 -lwxmsw32ud_core -lwxbase32ud -lwxpngd -lwxjpegd -lwxtiffd -lwxzlibd 
 -lwxregexud -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 
 -lshell32 -lole32 -loleaut32 -luuid -lcomctl32 -lwsock32 -lodbc32 -lshlwapi 
@@ -29,11 +27,11 @@
 
 #### Для оконной wx-программы:
 ```sh
--LD:\Development\RedPanda-CPP\wxWidgets\lib\gcc_lib -mthreads 
+-mthreads 
 -lwxmsw32ud_core -lwxbase32ud -lwxpngd -lwxjpegd -lwxtiffd -lwxzlibd 
 -lwxregexud -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 
 -lshell32 -lole32 -loleaut32 -luuid -lcomctl32 -lwsock32 -lodbc32 -lshlwapi 
--lversion -loleacc -luxtheme -mwindows -lstdc++ -finput-charset=utf-8 -lsqlite3
+-lversion -loleacc -luxtheme -lstdc++ -finput-charset=utf-8 -lsqlite3 -mwindows 
 ```
 
 ## Directories
