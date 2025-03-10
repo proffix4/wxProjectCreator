@@ -62,7 +62,7 @@
 | Unicode mode    | Unicode |
 | Shared mode     | Static  |
 | Modularity      | Monolithic |
-| GUI mode        | GUI |
+| GUI mode        | Console/GUI |
 | Toolkit         | wxMSW |
 | Processor type  | Default |
 | Runtime linking | Static |
@@ -71,11 +71,9 @@
 ### Flags
 
 |-----------------|--------|
-| Libraries       | `-mthreads -lwxmsw32ud_core -lwxbase32ud -lwxpngd -lwxjpegd -lwxtiffd -lwxzlibd -lwxregexud -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lcomctl32 -lwsock32 -lodbc32 -lshlwapi -lversion -loleacc -luxtheme -mwindows -lstdc++` |
+| Libraries       | `-mthreads -lwxmsw32ud_core -lwxbase32ud -lwxpngd -lwxjpegd -lwxtiffd -lwxzlibd -lwxregexud -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lcomctl32 -lwsock32 -lodbc32 -lshlwapi -lversion -loleacc -luxtheme -mwindows -lstdc++ -static` |
 
 ✅  *__Если приложение консольное, то флаг "-mwindows" не нужен !__*
-
-✅  *__Если приложение не должно зависеть от других файлов (т.е. нужен портативный файл), то нужно добавить еще флаг "-static"__*
 
 ---
 
@@ -88,7 +86,7 @@
 | Unicode mode    | Unicode |
 | Shared mode     | Static  |
 | Modularity      | Monolithic |
-| GUI mode        | GUI |
+| GUI mode        | Console/GUI |
 | Toolkit         | wxMSW |
 | Processor type  | Default |
 | Runtime linking | Static |
@@ -97,12 +95,9 @@
 ### Flags
 
 |-----------------|--------|
-| Libraries       | `-mthreads -lwxmsw32u_core -lwxbase32u -lwxpng -lwxjpeg -lwxtiff -lwxzlib -lwxregexu -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lcomctl32 -lwsock32 -lodbc32 -lshlwapi -lversion -loleacc -luxtheme -mwindows -lstdc++` |
+| Libraries       | `-mthreads -lwxmsw32u_core -lwxbase32u -lwxpng -lwxjpeg -lwxtiff -lwxzlib -lwxregexu -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lcomctl32 -lwsock32 -lodbc32 -lshlwapi -lversion -loleacc -luxtheme -mwindows -lstdc++ -static` |
 
 ✅  *__Если приложение консольное, то флаг "-mwindows" не нужен !__*
-
-✅  *__Если приложение не должно зависеть от других файлов (т.е. нужен портативный файл), то нужно добавить еще флаг "-static"__*
-
 
 ---
 
