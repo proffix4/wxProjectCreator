@@ -1,19 +1,20 @@
 @echo off
+setlocal enabledelayedexpansion
 
-REM Определение шаблонов файлов для удаления
-set FILE_PATTERNS=*.bak *.sln *.vcxproj *.vcxproj.user makefile.gcc Makefile linux_app *-autosave.pjd *.rc
+for %%f in (*.bak) do del /Q /F "%%f" >nul 2>&1
+for %%f in (*.sln) do del /Q /F "%%f" >nul 2>&1
+for %%f in (*.vcxproj) do del /Q /F "%%f" >nul 2>&1
+for %%f in (*.vcxproj.user) do del /Q /F "%%f" >nul 2>&1
+for %%f in (makefile.gcc) do del /Q /F "%%f" >nul 2>&1
+for %%f in (Makefile) do del /Q /F "%%f" >nul 2>&1
+for %%f in (linux_app) do del /Q /F "%%f" >nul 2>&1
+for %%f in (*-autosave.pjd) do del /Q /F "%%f" >nul 2>&1
+for %%f in (*.rc) do del /Q /F "%%f" >nul 2>&1
 
-REM Удаление указанных шаблонов файлов
-for %%f in (%FILE_PATTERNS%) do (
-    del /Q %%f >nul 2>&1
-)
-
-REM Определение каталогов для удаления
-set DIRS=Debug MinGWUnicodeDebug MinGWUnicodeRelease Release
-
-REM Удаление указанных каталогов, если они существуют
-for %%d in (%DIRS%) do (
-    if exist %%d rmdir /S /Q %%d
+for %%d in (Debug MinGWUnicodeDebug MinGWUnicodeRelease Release) do (
+    if exist "%%d" (
+        rmdir /S /Q "%%d"
+    )
 )
 
 echo Cleaning of project configurations is completed.
