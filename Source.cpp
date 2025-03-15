@@ -16,9 +16,10 @@
 #include <wx/timer.h>      // Таймер для анимации текста в статусной строке
 #include "tsnsoft.xpm"     // Подключение XPM-изображения для иконки и картинки
 #include "wxwidgets.xpm"   // Подключение XPM-изображения для иконки и картинки
-#include "dialogblocks.xpm"
-#include "rpcpp.xpm"
-#include "visualstudio.xpm"
+#include "dialogblocks.xpm" // Подключение XPM-изображения для иконки и картинки для DialogBlocks
+#include "rpcpp.xpm" 	 // Подключение XPM-изображения для иконки и картинки для RedPanda-CPP
+#include "visualstudio.xpm" // Подключение XPM-изображения для иконки и картинки для Visual Studio
+#include "visual_studio_code.xpm" // Подключение XPM-изображения для иконки и картинки для Visual Studio Code
 
 // Константа для имени конфигурационного файла
 const wxString CONFIG_FILE_NAME = L"wxProjectCreator.ini";
@@ -28,14 +29,13 @@ class ProjectCreator : public wxFrame {
 public:
 	// Конструктор окна ProjectCreator
 	ProjectCreator()
-		: wxFrame(nullptr, wxID_ANY, L"Создатель нового проекта с wxWidgets (ver. 5.7)", wxDefaultPosition, wxSize(500, 325)),
+		: wxFrame(nullptr, wxID_ANY, L"Создатель нового проекта с wxWidgets (ver. 6)", wxDefaultPosition, wxSize(500, 350)),
 		timer(this) // Инициализация таймера
 	{
 		SetIcon(wxIcon(tsnsoft_xpm)); // Установка иконки окна
 		SetMinSize(GetSize()); // Фиксация размера окна
 		SetMaxSize(GetSize()); // Фиксация размера окна
 		SetWindowStyle(wxDEFAULT_FRAME_STYLE & ~wxRESIZE_BORDER & ~wxMAXIMIZE_BOX); // Убрать кнопку "распахнуть на весь экран"
-
 		Centre(); // Центрирование окна на экране
 
 		// --- Создание статусной строки ---
@@ -69,7 +69,7 @@ public:
 		templateChoice->Append(L"DialogBlocks");    // индекс 0
 		templateChoice->Append(L"RedPanda-CPP");    // индекс 1
 		templateChoice->Append(L"Visual Studio");   // индекс 2
-
+		templateChoice->Append(L"Visual Studio Code"); // индекс 3
 		templateChoice->Bind(wxEVT_CHOICE, &ProjectCreator::OnTemplateChoice, this);
 		templateSizer->Add(templateChoice, 1, wxALL | wxEXPAND, 5);
 		panelSizer->Add(templateSizer, 0, wxEXPAND);
@@ -86,6 +86,20 @@ public:
 		wxWidgetsPathSizer->Add(wxWidgetsPathCtrl, 1, wxALL | wxEXPAND, 5);
 		panelSizer->Add(wxWidgetsPathSizer, 0, wxEXPAND);
 
+		// --- Строка для ввода пути к MinGW ---
+		wxBoxSizer* mingwPathSizer = new wxBoxSizer(wxHORIZONTAL);
+		mingwLabel = new wxStaticText(m_panel, wxID_ANY, L"Путь к MinGW:");
+		mingwPathSizer->Add(mingwLabel, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+		mingwPathCtrl = new wxTextCtrl(m_panel, wxID_ANY);
+		mingwPathSizer->Add(mingwPathCtrl, 1, wxALL | wxEXPAND, 5);
+		panelSizer->Add(mingwPathSizer, 0, wxEXPAND);
+
+		// По умолчанию скрываем поля для wxWidgets и MinGW
+		wxWidgetsLabel->Hide();
+		wxWidgetsPathCtrl->Hide();
+		mingwLabel->Hide();
+		mingwPathCtrl->Hide();
+
 		// --- Кнопка для создания проекта ---
 		wxButton* createButton = new wxButton(m_panel, wxID_ANY, L"Сделать проект");
 		createButton->Bind(wxEVT_BUTTON, &ProjectCreator::OnCreateProject, this);
@@ -95,7 +109,7 @@ public:
 		wxStaticBitmap* imageBitmap = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(wxwidgets_xpm));
 		panelSizer->Add(imageBitmap, 0, wxALL | wxALIGN_CENTER, 10);
 
-		// *** ДОБАВЛЕНО: Сохраняем указатель на imageBitmap в m_imageBitmap, чтобы менять картинку ***
+		// *** ДОБАВЛЕНО: Сохраняем указатель на imageBitmap, чтобы менять картинку ***
 		m_imageBitmap = imageBitmap;
 
 		// --- Загрузка настроек приложения ---
@@ -119,17 +133,17 @@ private:
 	wxChoice* templateChoice;          // Элемент для выбора типа шаблона
 	wxStaticText* wxWidgetsLabel;      // Метка для пути к wxWidgets
 	wxTextCtrl* wxWidgetsPathCtrl;     // Элемент для ввода пути к wxWidgets
+	wxStaticText* mingwLabel;          // Метка для пути к MinGW
+	wxTextCtrl* mingwPathCtrl;         // Элемент для ввода пути к MinGW
 	wxCheckBox* visualCheckBox;        // Элемент для выбора визуальной программы
 	wxTimer timer;                     // Таймер для бегущей строки
 	wxString originalText;             // Оригинальный текст
 	wxString scrollingText;            // Текущий текст для анимации
-
-	// Храним указатель на картинку, чтобы менять её при смене шаблона
-	wxStaticBitmap* m_imageBitmap = nullptr;
+	wxStaticBitmap* m_imageBitmap = nullptr; // Храним указатель на картинку
 
 	// Прототипы функций для копирования директории и замены содержимого файла
 	void CopyDirectory(const wxString& source, const wxString& destination);
-	void ReplaceInFile(const wxString& filePath, const wxString& projectName, wxString wxWidgetsPath);
+	void ReplaceInFile(const wxString& filePath, const wxString& projectName, wxString wxWidgetsPath, wxString mingwPath);
 
 	// Функция обработки таймера для бегущей строки
 	void OnTimer(wxTimerEvent&) {
@@ -143,7 +157,7 @@ private:
 	void OnTemplateChoice(wxCommandEvent&)
 	{
 		int sel = templateChoice->GetSelection();
-		if (sel == 1 || sel == 2) {
+		if (sel == 1 || sel == 2 || sel == 3) {
 			wxWidgetsLabel->Show();
 			wxWidgetsPathCtrl->Show();
 		}
@@ -152,22 +166,31 @@ private:
 			wxWidgetsPathCtrl->Hide();
 		}
 
+		// Показываем поле для MinGW только для Visual Studio Code
+		if (sel == 3) {
+			mingwLabel->Show();
+			mingwPathCtrl->Show();
+		}
+		else {
+			mingwLabel->Hide();
+			mingwPathCtrl->Hide();
+		}
+
 		// Меняем картинку в зависимости от выбора пользователя
 		if (m_imageBitmap) {
 			if (sel == 0) {
-				// DialogBlocks
 				m_imageBitmap->SetBitmap(wxBitmap(dialogblocks_xpm));
 			}
 			else if (sel == 1) {
-				// RedPanda-CPP
 				m_imageBitmap->SetBitmap(wxBitmap(rpcpp_xpm));
 			}
 			else if (sel == 2) {
-				// Visual Studio
 				m_imageBitmap->SetBitmap(wxBitmap(visualstudio_xpm));
 			}
+			else if (sel == 3) {
+				m_imageBitmap->SetBitmap(wxBitmap(visual_studio_code_xpm));
+			}
 		}
-
 		m_panel->Layout();
 	}
 
@@ -177,8 +200,7 @@ private:
 		wxString exePath = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath();
 		wxString configPath = exePath + wxFILE_SEP_PATH + CONFIG_FILE_NAME;
 		wxFileConfig config("ProjectCreator", wxEmptyString, configPath, wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
-
-		wxString projectName, wxWidgetsPath;
+		wxString projectName, wxWidgetsPath, mingwPath;
 		int templateIndex;
 		if (config.Read(L"ProjectName", &projectName)) {
 			projectNameCtrl->SetValue(projectName);
@@ -193,7 +215,12 @@ private:
 			wxWidgetsPathCtrl->SetValue(wxWidgetsPath);
 			CallAfter([=]() {
 				wxWidgetsPathCtrl->SetInsertionPoint(0);
-				projectNameCtrl->SetSelection(0, 0);
+				});
+		}
+		if (config.Read(L"MingwPath", &mingwPath)) { // Загружаем путь к MinGW
+			mingwPathCtrl->SetValue(mingwPath);
+			CallAfter([=]() {
+				mingwPathCtrl->SetInsertionPoint(0);
 				});
 		}
 		long visualProgram = 0;
@@ -210,6 +237,7 @@ private:
 		config.Write(L"ProjectName", projectNameCtrl->GetValue());
 		config.Write(L"TemplateType", templateChoice->GetSelection());
 		config.Write(L"WxWidgetsPath", wxWidgetsPathCtrl->GetValue());
+		config.Write(L"MingwPath", mingwPathCtrl->GetValue()); // Сохраняем путь к MinGW
 		config.Write(L"VisualProgram", visualCheckBox->GetValue() ? 1 : 0);
 		config.Flush();
 	}
@@ -222,9 +250,11 @@ private:
 			wxMessageBox(L"Введите имя проекта", L"Ошибка", wxOK | wxICON_ERROR);
 			return;
 		}
+
 		wxString templateType = templateChoice->GetStringSelection();
 		wxString basePath = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath();
 		wxString projectPath = basePath + L"/" + projectName;
+
 		if (!wxFileName::Mkdir(projectPath, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL)) {
 			wxMessageBox(L"Не удалось создать директорию проекта", L"Ошибка", wxOK | wxICON_ERROR);
 			return;
@@ -249,14 +279,20 @@ private:
 			else
 				templatePath = basePath + L"/templates/vs_console";
 		}
+		else if (templateType == L"Visual Studio Code") {
+			if (visualCheckBox->GetValue())
+				templatePath = basePath + L"/templates/vscode_visual";
+			else
+				templatePath = basePath + L"/templates/vscode_console";
+		}
 
 		wxString commonPath = basePath + L"/templates/common";
 		SaveSettings();
-
 		CopyDirectory(templatePath, projectPath);
 		CopyDirectory(commonPath, projectPath);
 
 		wxString wxWidgetsPath = wxWidgetsPathCtrl->GetValue();
+		wxString mingwPath = mingwPathCtrl->GetValue();
 
 		if (templateType == L"RedPanda-CPP") {
 			wxString devFilePath = projectPath + L"/redpanda-cpp.dev";
@@ -266,7 +302,7 @@ private:
 					wxMessageBox(L"Не удалось переименовать dev файл", L"Ошибка", wxOK | wxICON_ERROR);
 					return;
 				}
-				ReplaceInFile(newDevFilePath, projectName, wxWidgetsPath);
+				ReplaceInFile(newDevFilePath, projectName, wxWidgetsPath, mingwPath);
 			}
 		}
 		else if (templateType == L"DialogBlocks") {
@@ -277,7 +313,7 @@ private:
 					wxMessageBox(L"Не удалось переименовать pjd файл", L"Ошибка", wxOK | wxICON_ERROR);
 					return;
 				}
-				ReplaceInFile(newPjdFilePath, projectName, wxEmptyString);
+				ReplaceInFile(newPjdFilePath, projectName, wxWidgetsPath, mingwPath);
 			}
 		}
 		else if (templateType == L"Visual Studio") {
@@ -288,9 +324,8 @@ private:
 					wxMessageBox(L"Не удалось переименовать sln файл", L"Ошибка", wxOK | wxICON_ERROR);
 					return;
 				}
-				ReplaceInFile(newSlnFilePath, projectName, wxWidgetsPath);
+				ReplaceInFile(newSlnFilePath, projectName, wxWidgetsPath, mingwPath);
 			}
-
 			wxString vcxFilePath = projectPath + L"/vs2022.vcxproj";
 			wxString newVcxFilePath = projectPath + L"/" + projectName + L".vcxproj";
 			if (wxFileExists(vcxFilePath)) {
@@ -298,7 +333,22 @@ private:
 					wxMessageBox(L"Не удалось переименовать vcxproj файл", L"Ошибка", wxOK | wxICON_ERROR);
 					return;
 				}
-				ReplaceInFile(newVcxFilePath, projectName, wxWidgetsPath);
+				ReplaceInFile(newVcxFilePath, projectName, wxWidgetsPath, mingwPath);
+			}
+		}
+		else if (templateType == L"Visual Studio Code") {
+			wxString tasksFilePath = projectPath + L"/.vscode/tasks.json";
+			wxString launchFilePath = projectPath + L"/.vscode/launch.json";
+			wxString propertiesFilePath = projectPath + L"/.vscode/c_cpp_properties.json";
+
+			if (wxFileExists(tasksFilePath)) {
+				ReplaceInFile(tasksFilePath, projectName, wxWidgetsPath, mingwPath);
+			}
+			if (wxFileExists(launchFilePath)) {
+				ReplaceInFile(launchFilePath, projectName, wxWidgetsPath, mingwPath);
+			}
+			if (wxFileExists(propertiesFilePath)) {
+				ReplaceInFile(propertiesFilePath, projectName, wxWidgetsPath, mingwPath);
 			}
 		}
 
@@ -320,6 +370,7 @@ void ProjectCreator::CopyDirectory(const wxString& source, const wxString& desti
 	while (cont) {
 		wxString sourcePath = source + "/" + filename;
 		wxString destPath = destination + "/" + filename;
+
 		if (wxDirExists(sourcePath)) {
 			wxFileName::Mkdir(destPath, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 			CopyDirectory(sourcePath, destPath);
@@ -327,16 +378,26 @@ void ProjectCreator::CopyDirectory(const wxString& source, const wxString& desti
 		else if (wxFileExists(sourcePath)) {
 			wxCopyFile(sourcePath, destPath);
 		}
+
 		cont = dir.GetNext(&filename);
 	}
 }
 
 // Функция для замены содержимого файла
-void ProjectCreator::ReplaceInFile(const wxString& filePath, const wxString& projectName, wxString wxWidgetsPath)
+void ProjectCreator::ReplaceInFile(const wxString& filePath, const wxString& projectName, wxString wxWidgetsPath, wxString mingwPath)
 {
+	// Нормализация путей: заменяем все обратные слэши (\) на прямые (/)
 	if (!wxWidgetsPath.IsEmpty()) {
-		if (!wxWidgetsPath.EndsWith("/") && !wxWidgetsPath.EndsWith("\\"))
+		wxWidgetsPath.Replace("\\", "/");
+		if (!wxWidgetsPath.EndsWith("/")) {
 			wxWidgetsPath.Append("/");
+		}
+	}
+	if (!mingwPath.IsEmpty()) {
+		mingwPath.Replace("\\", "/");
+		if (!mingwPath.EndsWith("/")) {
+			mingwPath.Append("/");
+		}
 	}
 
 	wxTextFile file;
@@ -357,6 +418,12 @@ void ProjectCreator::ReplaceInFile(const wxString& filePath, const wxString& pro
 		content.Replace("D:/Development/RedPanda-CPP/wxWidgets/", wxWidgetsPath);
 		content.Replace("D:\\Development\\RedPanda-CPP\\wxWidgets\\", wxWidgetsPath);
 		content.Replace("D:\\Development\\RedPanda-CPP\\wxWidgets/", wxWidgetsPath);
+	}
+
+	if (!mingwPath.IsEmpty()) {
+		content.Replace("D:/Development/RedPanda-CPP/mingw64/", mingwPath);
+		content.Replace("D:\\Development\\RedPanda-CPP\\mingw64\\", mingwPath);
+		content.Replace("D:\\Development\\RedPanda-CPP\\mingw64/", mingwPath);
 	}
 
 	file.Clear();
