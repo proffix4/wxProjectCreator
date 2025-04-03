@@ -99,6 +99,7 @@
             "command": "cmd",
             "args": [
                 "/c",
+                "set PATH=D:/Development/RedPanda-CPP/mingw64/bin;%PATH% &&",
                 "start",
                 "\"\"",
                 "${workspaceFolder}/myapp.exe"
@@ -111,6 +112,7 @@
             "command": "cmd",
             "args": [
                 "/c",
+                "set PATH=D:/Development/RedPanda-CPP/mingw64/bin;%PATH% &&",
                 "start",
                 "\"\"",
                 "${workspaceFolder}/myappd.exe"

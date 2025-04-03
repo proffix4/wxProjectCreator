@@ -61,8 +61,8 @@ IMPLEMENT_CLASS(MainForm, wxFrame)
 	BEGIN_EVENT_TABLE(MainForm, wxFrame)
 
 	////@begin MainForm event table entries
-	EVT_BUTTON(BUTTON_CREATE, MainForm::OnCreateProject)
-	EVT_CHOICE(CHOICE_TYPE, MainForm::OnTemplateChoice)
+    EVT_BUTTON( BUTTON_CREATE, MainForm::OnCreateProject )
+    EVT_CHOICE( CHOICE_TYPE, MainForm::OnTemplateChoice )
 	////@end MainForm event table entries
 
 	END_EVENT_TABLE()
@@ -83,7 +83,7 @@ MainForm::MainForm(wxWindow* parent, wxWindowID id, const wxString& caption, con
 	Create(parent, id, caption, pos, size, style);
 
 	// Инициализация бегущей строки
-	m_originalText = L"✬    Талипов С.Н.    ✬    г. Павлодар, 2025 г.    ✬ https://github.com/tsnsoft    ";
+	m_originalText = L"✬   -=TSN Soft=-    ✬    г. Павлодар, 2025 г.    ✬ https://github.com/tsnsoft    ";
 	m_offset = 0;
 
 	// Настройка таймера
@@ -110,16 +110,16 @@ void LoadSettings(); // прототип функции для работы пр
 bool MainForm::Create(wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style)
 {
 	////@begin MainForm creation
-	wxFrame::Create(parent, id, caption, pos, size, style);
+    wxFrame::Create( parent, id, caption, pos, size, style );
 
-	this->SetBackgroundColour(wxColour(240, 240, 240));
-	CreateControls();
-	SetIcon(GetIconResource(wxT("tsnsoft.xpm")));
-	if (GetSizer())
-	{
-		GetSizer()->SetSizeHints(this);
-	}
-	Centre();
+    this->SetBackgroundColour(wxColour(240, 240, 240));
+    CreateControls();
+    SetIcon(GetIconResource(wxT("tsnsoft.xpm")));
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
+    Centre();
 	////@end MainForm creation
 		// Загружаем настройки из файла конфигурации
 	LoadSettings();
@@ -156,79 +156,80 @@ void MainForm::Init()
 void MainForm::CreateControls()
 {
 	////@begin MainForm content construction
-	MainForm* itemFrame1 = this;
+    MainForm* itemFrame1 = this;
 
-	wxGridBagSizer* itemGridBagSizer1 = new wxGridBagSizer(0, 0);
-	itemGridBagSizer1->SetEmptyCellSize(wxSize(10, 19));
-	itemFrame1->SetSizer(itemGridBagSizer1);
+    wxGridBagSizer* itemGridBagSizer1 = new wxGridBagSizer(0, 0);
+    itemGridBagSizer1->SetEmptyCellSize(wxSize(10, 19));
+    itemFrame1->SetSizer(itemGridBagSizer1);
 
-	wxButton* itemButton1 = new wxButton(itemFrame1, BUTTON_CREATE, wxT("Создать проект"), wxDefaultPosition, wxSize(150, -1), 0);
-	itemButton1->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-	itemGridBagSizer1->Add(itemButton1, wxGBPosition(5, 0), wxGBSpan(1, 2), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 6);
+    wxButton* itemButton1 = new wxButton( itemFrame1, BUTTON_CREATE, wxT("Создать проект"), wxDefaultPosition, wxSize(150, -1), 0 );
+    itemButton1->SetBackgroundColour(wxColour(239, 254, 237));
+    itemButton1->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
+    itemGridBagSizer1->Add(itemButton1, wxGBPosition(5, 0), wxGBSpan(1, 2), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 6);
 
-	wxTextCtrl* itemTextCtrl3 = new wxTextCtrl(itemFrame1, CTRL_MINGW_PATH, wxT("D:\\Development\\RedPanda-CPP\\mingw64"), wxDefaultPosition, wxSize(370, 28), 0);
-	itemTextCtrl3->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-	itemGridBagSizer1->Add(itemTextCtrl3, wxGBPosition(4, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL | wxRESERVE_SPACE_EVEN_IF_HIDDEN, 8);
+    wxTextCtrl* itemTextCtrl3 = new wxTextCtrl( itemFrame1, CTRL_MINGW_PATH, wxT("D:\\Development\\RedPanda-CPP\\mingw64"), wxDefaultPosition, wxSize(370, 28), 0 );
+    itemTextCtrl3->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
+    itemGridBagSizer1->Add(itemTextCtrl3, wxGBPosition(4, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 8);
 
-	wxTextCtrl* itemTextCtrl2 = new wxTextCtrl(itemFrame1, CTRL_WIDGETS_PATH, wxT("D:\\Development\\RedPanda-CPP\\wxWidgets"), wxDefaultPosition, wxSize(370, 28), 0);
-	itemTextCtrl2->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-	itemGridBagSizer1->Add(itemTextCtrl2, wxGBPosition(3, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL | wxRESERVE_SPACE_EVEN_IF_HIDDEN, 8);
+    wxTextCtrl* itemTextCtrl2 = new wxTextCtrl( itemFrame1, CTRL_WIDGETS_PATH, wxT("D:\\Development\\RedPanda-CPP\\wxWidgets"), wxDefaultPosition, wxSize(370, 28), 0 );
+    itemTextCtrl2->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
+    itemGridBagSizer1->Add(itemTextCtrl2, wxGBPosition(3, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 8);
 
-	wxTextCtrl* itemTextCtrl1 = new wxTextCtrl(itemFrame1, CTRL_PROJECT_NAME, wxT("wxProject1"), wxDefaultPosition, wxSize(370, 28), 0);
-	itemTextCtrl1->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-	itemGridBagSizer1->Add(itemTextCtrl1, wxGBPosition(0, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 5);
+    wxTextCtrl* itemTextCtrl1 = new wxTextCtrl( itemFrame1, CTRL_PROJECT_NAME, wxT("wxProject1"), wxDefaultPosition, wxSize(370, 28), 0 );
+    itemTextCtrl1->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
+    itemGridBagSizer1->Add(itemTextCtrl1, wxGBPosition(0, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	wxCheckBox* itemCheckBox2 = new wxCheckBox(itemFrame1, CHECKBOX_VISUAL, wxT("Визуальная программа"), wxDefaultPosition, wxDefaultSize, 0);
-	itemCheckBox2->SetValue(false);
-	itemCheckBox2->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-	itemGridBagSizer1->Add(itemCheckBox2, wxGBPosition(2, 0), wxGBSpan(1, 2), wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 6);
+    wxCheckBox* itemCheckBox2 = new wxCheckBox( itemFrame1, CHECKBOX_VISUAL, wxT("Визуальная программа"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemCheckBox2->SetValue(false);
+    itemCheckBox2->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
+    itemGridBagSizer1->Add(itemCheckBox2, wxGBPosition(2, 0), wxGBSpan(1, 2), wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 6);
 
-	wxArrayString itemChoice3Strings;
-	itemChoice3Strings.Add(wxT("DialogBlocks"));
-	itemChoice3Strings.Add(wxT("RedPanda-CPP"));
-	itemChoice3Strings.Add(wxT("Visual Studio"));
-	itemChoice3Strings.Add(wxT("Visual Studio Code"));
-	wxChoice* itemChoice3 = new wxChoice(itemFrame1, CHOICE_TYPE, wxDefaultPosition, wxSize(370, 28), itemChoice3Strings, 0);
-	itemChoice3->SetStringSelection(wxT("DialogBlocks"));
-	itemChoice3->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-	itemGridBagSizer1->Add(itemChoice3, wxGBPosition(1, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 5);
+    wxArrayString itemChoice3Strings;
+    itemChoice3Strings.Add(wxT("DialogBlocks"));
+    itemChoice3Strings.Add(wxT("RedPanda-CPP"));
+    itemChoice3Strings.Add(wxT("Visual Studio"));
+    itemChoice3Strings.Add(wxT("Visual Studio Code"));
+    wxChoice* itemChoice3 = new wxChoice( itemFrame1, CHOICE_TYPE, wxDefaultPosition, wxSize(370, 28), itemChoice3Strings, 0 );
+    itemChoice3->SetStringSelection(wxT("DialogBlocks"));
+    itemChoice3->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
+    itemGridBagSizer1->Add(itemChoice3, wxGBPosition(1, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	wxStaticText* itemStaticText4 = new wxStaticText(itemFrame1, TEXT_PROJECT_NAME, wxT("Имя проекта:"), wxDefaultPosition, wxDefaultSize, 0);
-	itemStaticText4->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-	itemGridBagSizer1->Add(itemStaticText4, wxGBPosition(0, 0), wxGBSpan(1, 1), wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 6);
+    wxStaticText* itemStaticText4 = new wxStaticText( itemFrame1, TEXT_PROJECT_NAME, wxT("Имя проекта:"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticText4->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
+    itemGridBagSizer1->Add(itemStaticText4, wxGBPosition(0, 0), wxGBSpan(1, 1), wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 6);
 
-	wxStaticText* itemStaticText1 = new wxStaticText(itemFrame1, TEXT_TYPE, wxT("Тип шаблона:"), wxDefaultPosition, wxDefaultSize, 0);
-	itemStaticText1->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-	itemGridBagSizer1->Add(itemStaticText1, wxGBPosition(1, 0), wxGBSpan(1, 1), wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 6);
+    wxStaticText* itemStaticText1 = new wxStaticText( itemFrame1, TEXT_TYPE, wxT("Тип шаблона:"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticText1->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
+    itemGridBagSizer1->Add(itemStaticText1, wxGBPosition(1, 0), wxGBSpan(1, 1), wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 6);
 
-	wxStaticText* itemStaticText5 = new wxStaticText(itemFrame1, TEXT_MINGW_PATH, wxT("Путь к MinGW:"), wxDefaultPosition, wxDefaultSize, 0);
-	itemStaticText5->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-	itemGridBagSizer1->Add(itemStaticText5, wxGBPosition(4, 0), wxGBSpan(1, 1), wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL | wxRESERVE_SPACE_EVEN_IF_HIDDEN, 6);
+    wxStaticText* itemStaticText5 = new wxStaticText( itemFrame1, TEXT_MINGW_PATH, wxT("Путь к компилятору:"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticText5->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
+    itemGridBagSizer1->Add(itemStaticText5, wxGBPosition(4, 0), wxGBSpan(1, 1), wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 6);
 
-	wxStaticText* itemStaticText2 = new wxStaticText(itemFrame1, TEXT_WIDGETS_PATH, wxT("Путь к wxWidgets:"), wxDefaultPosition, wxDefaultSize, 0);
-	itemStaticText2->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-	itemGridBagSizer1->Add(itemStaticText2, wxGBPosition(3, 0), wxGBSpan(1, 1), wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL | wxRESERVE_SPACE_EVEN_IF_HIDDEN, 6);
+    wxStaticText* itemStaticText2 = new wxStaticText( itemFrame1, TEXT_WIDGETS_PATH, wxT("Путь к сборке wxWidgets:"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticText2->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
+    itemGridBagSizer1->Add(itemStaticText2, wxGBPosition(3, 0), wxGBSpan(1, 1), wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 6);
 
-	wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxHORIZONTAL);
-	itemGridBagSizer1->Add(itemBoxSizer3, wxGBPosition(6, 0), wxGBSpan(1, 2), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 5);
+    wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxHORIZONTAL);
+    itemGridBagSizer1->Add(itemBoxSizer3, wxGBPosition(6, 0), wxGBSpan(1, 2), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	wxPanel* itemPanel4 = new wxPanel(itemFrame1, ID_PANEL, wxDefaultPosition, wxSize(-1, 95), wxSUNKEN_BORDER | wxTAB_TRAVERSAL);
-	itemPanel4->SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
-	itemBoxSizer3->Add(itemPanel4, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+    wxPanel* itemPanel4 = new wxPanel( itemFrame1, ID_PANEL, wxDefaultPosition, wxSize(-1, 95), wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    itemPanel4->SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
+    itemBoxSizer3->Add(itemPanel4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	wxStaticBitmap* itemStaticBitmap5 = new wxStaticBitmap(itemFrame1, IMAGE_TYPE, itemFrame1->GetBitmapResource(wxT("dialogblocks.xpm")), wxDefaultPosition, wxSize(118, 95), 0);
-	itemBoxSizer3->Add(itemStaticBitmap5, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+    wxStaticBitmap* itemStaticBitmap5 = new wxStaticBitmap( itemFrame1, IMAGE_TYPE, itemFrame1->GetBitmapResource(wxT("dialogblocks.xpm")), wxDefaultPosition, wxSize(118, 95), 0 );
+    itemBoxSizer3->Add(itemStaticBitmap5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	wxPanel* itemPanel6 = new wxPanel(itemFrame1, ID_PANEL1, wxDefaultPosition, wxSize(-1, 95), wxSUNKEN_BORDER | wxTAB_TRAVERSAL);
-	itemPanel6->SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
-	itemBoxSizer3->Add(itemPanel6, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+    wxPanel* itemPanel6 = new wxPanel( itemFrame1, ID_PANEL1, wxDefaultPosition, wxSize(-1, 95), wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    itemPanel6->SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
+    itemBoxSizer3->Add(itemPanel6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-	wxPanel* itemPanel1 = new wxPanel(itemFrame1, PANEL_SCROLL_TEXT, wxDefaultPosition, wxSize(530, 35), wxNO_BORDER | wxTAB_TRAVERSAL);
-	itemPanel1->SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
-	itemGridBagSizer1->Add(itemPanel1, wxGBPosition(7, 0), wxGBSpan(1, 2), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 0);
+    wxPanel* itemPanel1 = new wxPanel( itemFrame1, PANEL_SCROLL_TEXT, wxDefaultPosition, wxSize(530, 35), wxNO_BORDER|wxTAB_TRAVERSAL );
+    itemPanel1->SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
+    itemGridBagSizer1->Add(itemPanel1, wxGBPosition(7, 0), wxGBSpan(1, 2), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 
-	// Connect events and objects
-	itemPanel1->Connect(PANEL_SCROLL_TEXT, wxEVT_PAINT, wxPaintEventHandler(MainForm::OnPaint), NULL, this);
+    // Connect events and objects
+    itemPanel1->Connect(PANEL_SCROLL_TEXT, wxEVT_PAINT, wxPaintEventHandler(MainForm::OnPaint), NULL, this);
 	////@end MainForm content construction
 }
 
@@ -249,13 +250,13 @@ wxBitmap MainForm::GetBitmapResource(const wxString& name)
 {
 	// Bitmap retrieval
 ////@begin MainForm bitmap retrieval
-	wxUnusedVar(name);
-	if (name == wxT("dialogblocks.xpm"))
-	{
-		wxBitmap bitmap(dialogblocks_xpm);
-		return bitmap;
-	}
-	return wxNullBitmap;
+    wxUnusedVar(name);
+    if (name == wxT("dialogblocks.xpm"))
+    {
+        wxBitmap bitmap(dialogblocks_xpm);
+        return bitmap;
+    }
+    return wxNullBitmap;
 	////@end MainForm bitmap retrieval
 }
 
@@ -267,13 +268,13 @@ wxIcon MainForm::GetIconResource(const wxString& name)
 {
 	// Icon retrieval
 ////@begin MainForm icon retrieval
-	wxUnusedVar(name);
-	if (name == wxT("tsnsoft.xpm"))
-	{
-		wxIcon icon(tsnsoft_xpm);
-		return icon;
-	}
-	return wxNullIcon;
+    wxUnusedVar(name);
+    if (name == wxT("tsnsoft.xpm"))
+    {
+        wxIcon icon(tsnsoft_xpm);
+        return icon;
+    }
+    return wxNullIcon;
 	////@end MainForm icon retrieval
 }
 
