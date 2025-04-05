@@ -4,8 +4,11 @@
         {
             "label": "Скомпилировать wxWidgets-приложение (Release)",
             "type": "shell",
-            "command": "D:/Development/RedPanda-CPP/mingw64/bin/x86_64-w64-mingw32-g++.exe",
+            "command": "cmd",
             "args": [
+                "/c",
+                "set PATH=D:/Development/RedPanda-CPP/mingw64/bin;%PATH% &&",
+                "D:/Development/RedPanda-CPP/mingw64/bin/x86_64-w64-mingw32-g++.exe",
                 "-o",
                 "${workspaceFolder}/myapp.exe",
                 "${workspaceFolder}/*.cpp",
@@ -50,8 +53,11 @@
         {
             "label": "Скомпилировать wxWidgets-приложение (Debug)",
             "type": "shell",
-            "command": "D:/Development/RedPanda-CPP/mingw64/bin/x86_64-w64-mingw32-g++.exe",
+            "command": "cmd",
             "args": [
+                "/c",
+                "set PATH=D:/Development/RedPanda-CPP/mingw64/bin;%PATH% &&",
+                "D:/Development/RedPanda-CPP/mingw64/bin/x86_64-w64-mingw32-g++.exe",
                 "-o",
                 "${workspaceFolder}/myappd.exe",
                 "${workspaceFolder}/*.cpp",
