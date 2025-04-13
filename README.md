@@ -10,3 +10,5 @@
 ![srcreenshot](screenshot3.png)
 
 ![srcreenshot](screenshot4.png)
+
+**Быстрый старт с wxWidgets 2025. Часть 1 - Сборка виджетов с RedPanda-CPP:** https://youtu.be/zdE-Q971L-Q
