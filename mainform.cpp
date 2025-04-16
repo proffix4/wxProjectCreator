@@ -37,6 +37,7 @@
 
 ////@begin XPM images
 #include "tsnsoft.xpm"
+#include "home.xpm"
 #include "dialogblocks.xpm"
 ////@end XPM images
 #include "rpcpp.xpm"
@@ -63,6 +64,7 @@ IMPLEMENT_CLASS(MainForm, wxFrame)
 	////@begin MainForm event table entries
     EVT_BUTTON( BUTTON_CREATE, MainForm::OnCreateProject )
     EVT_CHOICE( CHOICE_TYPE, MainForm::OnTemplateChoice )
+    EVT_BUTTON( ID_BITMAPBUTTON, MainForm::OnBitmapbuttonClick )
 	////@end MainForm event table entries
 
 	END_EVENT_TABLE()
@@ -165,19 +167,19 @@ void MainForm::CreateControls()
     wxButton* itemButton1 = new wxButton( itemFrame1, BUTTON_CREATE, wxT("Создать проект"), wxDefaultPosition, wxSize(150, -1), 0 );
     itemButton1->SetBackgroundColour(wxColour(239, 254, 237));
     itemButton1->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-    itemGridBagSizer1->Add(itemButton1, wxGBPosition(5, 0), wxGBSpan(1, 2), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 6);
+    itemGridBagSizer1->Add(itemButton1, wxGBPosition(5, 0), wxGBSpan(1, 3), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 6);
 
     wxTextCtrl* itemTextCtrl3 = new wxTextCtrl( itemFrame1, CTRL_MINGW_PATH, wxT("D:\\Development\\RedPanda-CPP\\mingw64"), wxDefaultPosition, wxSize(370, 28), 0 );
     itemTextCtrl3->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-    itemGridBagSizer1->Add(itemTextCtrl3, wxGBPosition(4, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 8);
+    itemGridBagSizer1->Add(itemTextCtrl3, wxGBPosition(4, 1), wxGBSpan(1, 2), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 8);
 
     wxTextCtrl* itemTextCtrl2 = new wxTextCtrl( itemFrame1, CTRL_WIDGETS_PATH, wxT("D:\\Development\\RedPanda-CPP\\wxWidgets"), wxDefaultPosition, wxSize(370, 28), 0 );
     itemTextCtrl2->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-    itemGridBagSizer1->Add(itemTextCtrl2, wxGBPosition(3, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 8);
+    itemGridBagSizer1->Add(itemTextCtrl2, wxGBPosition(3, 1), wxGBSpan(1, 2), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 8);
 
     wxTextCtrl* itemTextCtrl1 = new wxTextCtrl( itemFrame1, CTRL_PROJECT_NAME, wxT("wxProject1"), wxDefaultPosition, wxSize(370, 28), 0 );
     itemTextCtrl1->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-    itemGridBagSizer1->Add(itemTextCtrl1, wxGBPosition(0, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemGridBagSizer1->Add(itemTextCtrl1, wxGBPosition(0, 1), wxGBSpan(1, 2), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxCheckBox* itemCheckBox2 = new wxCheckBox( itemFrame1, CHECKBOX_VISUAL, wxT("Визуальная программа"), wxDefaultPosition, wxDefaultSize, 0 );
     itemCheckBox2->SetValue(false);
@@ -192,15 +194,20 @@ void MainForm::CreateControls()
     wxChoice* itemChoice3 = new wxChoice( itemFrame1, CHOICE_TYPE, wxDefaultPosition, wxSize(370, 28), itemChoice3Strings, 0 );
     itemChoice3->SetStringSelection(wxT("DialogBlocks"));
     itemChoice3->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
-    itemGridBagSizer1->Add(itemChoice3, wxGBPosition(1, 1), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemGridBagSizer1->Add(itemChoice3, wxGBPosition(1, 1), wxGBSpan(1, 2), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStaticText* itemStaticText4 = new wxStaticText( itemFrame1, TEXT_PROJECT_NAME, wxT("Имя проекта:"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText4 = new wxStaticText( itemFrame1, TEXT_PROJECT_NAME, wxT("Имя для нового проекта:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticText4->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
     itemGridBagSizer1->Add(itemStaticText4, wxGBPosition(0, 0), wxGBSpan(1, 1), wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 6);
 
-    wxStaticText* itemStaticText1 = new wxStaticText( itemFrame1, TEXT_TYPE, wxT("Тип шаблона:"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText1 = new wxStaticText( itemFrame1, TEXT_TYPE, wxT("Для какой IDE проект:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticText1->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
     itemGridBagSizer1->Add(itemStaticText1, wxGBPosition(1, 0), wxGBSpan(1, 1), wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 6);
+
+    wxBitmapButton* itemBitmapButton1 = new wxBitmapButton( itemFrame1, ID_BITMAPBUTTON, itemFrame1->GetBitmapResource(wxT("home.xpm")), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
+    if (MainForm::ShowToolTips())
+        itemBitmapButton1->SetToolTip(wxT("На сайт программы"));
+    itemGridBagSizer1->Add(itemBitmapButton1, wxGBPosition(7, 2), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxStaticText* itemStaticText5 = new wxStaticText( itemFrame1, TEXT_MINGW_PATH, wxT("Путь к компилятору:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticText5->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
@@ -251,7 +258,12 @@ wxBitmap MainForm::GetBitmapResource(const wxString& name)
 	// Bitmap retrieval
 ////@begin MainForm bitmap retrieval
     wxUnusedVar(name);
-    if (name == wxT("dialogblocks.xpm"))
+    if (name == wxT("home.xpm"))
+    {
+        wxBitmap bitmap(home_xpm);
+        return bitmap;
+    }
+    else if (name == wxT("dialogblocks.xpm"))
     {
         wxBitmap bitmap(dialogblocks_xpm);
         return bitmap;
@@ -663,3 +675,14 @@ void MainForm::OnTimer(wxTimerEvent& event)
 	// Перерисовываем панель
 	panel->Refresh();
 }
+
+
+/*
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BITMAPBUTTON
+ */
+
+void MainForm::OnBitmapbuttonClick( wxCommandEvent& event )
+{
+    wxLaunchDefaultBrowser("https://github.com/tsnsoft/wxProjectCreator");
+}
+

@@ -42,6 +42,7 @@
 #define CHOICE_TYPE 10004
 #define TEXT_PROJECT_NAME 10010
 #define TEXT_TYPE 10009
+#define ID_BITMAPBUTTON 10015
 #define TEXT_MINGW_PATH 10013
 #define TEXT_WIDGETS_PATH 10008
 #define ID_PANEL 10006
@@ -49,7 +50,7 @@
 #define ID_PANEL1 10007
 #define PANEL_SCROLL_TEXT 10012
 #define SYMBOL_MAINFORM_STYLE wxCAPTION|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_MAINFORM_TITLE wxT("wxProjectCreator (ver.8)")
+#define SYMBOL_MAINFORM_TITLE wxT("wxProjectCreator (ver.9)")
 #define SYMBOL_MAINFORM_IDNAME ID_MAINFORM
 #define SYMBOL_MAINFORM_SIZE wxSize(540, 380)
 #define SYMBOL_MAINFORM_POSITION wxDefaultPosition
@@ -95,6 +96,9 @@ public:
 
     /// wxEVT_COMMAND_CHOICE_SELECTED event handler for CHOICE_TYPE
     void OnTemplateChoice( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BITMAPBUTTON
+    void OnBitmapbuttonClick( wxCommandEvent& event );
 
     /// wxEVT_PAINT event handler for PANEL_SCROLL_TEXT
     void OnPaint( wxPaintEvent& event );
