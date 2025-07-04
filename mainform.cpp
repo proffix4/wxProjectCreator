@@ -209,11 +209,11 @@ void MainForm::CreateControls()
         itemBitmapButton1->SetToolTip(wxT("На сайт программы"));
     itemGridBagSizer1->Add(itemBitmapButton1, wxGBPosition(7, 2), wxGBSpan(1, 1), wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStaticText* itemStaticText5 = new wxStaticText( itemFrame1, TEXT_MINGW_PATH, wxT("Путь к компилятору:"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText5 = new wxStaticText( itemFrame1, TEXT_MINGW_PATH, wxT("Путь к компилятору:\n(без пробелов)"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticText5->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
     itemGridBagSizer1->Add(itemStaticText5, wxGBPosition(4, 0), wxGBSpan(1, 1), wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 6);
 
-    wxStaticText* itemStaticText2 = new wxStaticText( itemFrame1, TEXT_WIDGETS_PATH, wxT("Путь к сборке wxWidgets:"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText2 = new wxStaticText( itemFrame1, TEXT_WIDGETS_PATH, wxT("Путь к сборке wxWidgets:\n(без пробелов)"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticText2->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Tahoma")));
     itemGridBagSizer1->Add(itemStaticText2, wxGBPosition(3, 0), wxGBSpan(1, 1), wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxRESERVE_SPACE_EVEN_IF_HIDDEN, 6);
 
@@ -683,6 +683,6 @@ void MainForm::OnTimer(wxTimerEvent& event)
 
 void MainForm::OnBitmapbuttonClick( wxCommandEvent& event )
 {
-    wxLaunchDefaultBrowser("https://github.com/tsnsoft/wxProjectCreator");
+    wxLaunchDefaultBrowser("https://github.com/tsnsoft/wxProjectCreator/releases");
 }
 

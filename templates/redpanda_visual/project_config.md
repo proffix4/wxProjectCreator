@@ -19,7 +19,7 @@
 #### Для консольной wx-программы:
 ```sh
 -mthreads 
--lwxmsw32ud_core -lwxbase32ud -lwxpngd -lwxjpegd -lwxtiffd -lwxzlibd 
+-lwxmsw33ud_core -lwxbase33ud -lgdiplus -lmsimg32 -lwxpngd -lwxjpegd -lwxtiffd -lwxzlibd 
 -lwxregexud -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 
 -lshell32 -lole32 -loleaut32 -luuid -lcomctl32 -lwsock32 -lodbc32 -lshlwapi 
 -lversion -loleacc -luxtheme -lstdc++ -finput-charset=utf-8 -lsqlite3 -static
@@ -28,7 +28,7 @@
 #### Для оконной wx-программы:
 ```sh
 -mthreads 
--lwxmsw32ud_core -lwxbase32ud -lwxpngd -lwxjpegd -lwxtiffd -lwxzlibd 
+-lwxmsw33ud_core -lwxbase33ud -lgdiplus -lmsimg32 -lwxpngd -lwxjpegd -lwxtiffd -lwxzlibd 
 -lwxregexud -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 
 -lshell32 -lole32 -loleaut32 -luuid -lcomctl32 -lwsock32 -lodbc32 -lshlwapi 
 -lversion -loleacc -luxtheme -lstdc++ -finput-charset=utf-8 -lsqlite3 -mwindows -static

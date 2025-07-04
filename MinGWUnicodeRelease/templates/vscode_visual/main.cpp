@@ -22,7 +22,6 @@ bool MainApp::OnInit() {
 
 MainFrame::MainFrame(wxWindow* parent)
 	: MainFrameBase(parent) {
-	wxInitAllImageHandlers();
 	this->SetIcon(wxIcon(tsnsoft_xpm)); // Устанавливаем иконку для формы
 }
 

@@ -17,8 +17,8 @@
 | Make Unicode strings source-friendly   | ✅         |
 | Target wxWidgets version               | `3.2.6`    |
 | VC++ version                           | `17`   <<--    Microsoft Visual Studio Community 2022 (64-разрядная версия) - Версия 17.12.4       |
-| VC++ tools version                     | `14.42.34433`   <<--    C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433 |
-| Full Platform SDK version              | `10.0.22621.0`   <<--    C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0 |
+| VC++ tools version                     | `14.44.35207`   <<--    C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207 |
+| Full Platform SDK version              | `10.0.26100.0`   <<--    C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0 |
 | Source encoding                        | `utf-8`    |
 | Project encoding                       | `utf-8`    |
 | Message encoding                       | `utf-8`    |
