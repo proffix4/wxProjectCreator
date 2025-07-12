@@ -2,7 +2,7 @@
 filename = redpanda-cpp.dev
 name = RPCPP_wx_App
 UnitCount = 7
-Type = 1
+Type = 0
 Ver = 3
 Includes = D:/Development/RedPanda-CPP/wxWidgets/include;D:/Development/RedPanda-CPP/wxWidgets/lib/gcc_lib/mswud
 Libs = D:/Development/RedPanda-CPP/wxWidgets/lib/gcc_lib
